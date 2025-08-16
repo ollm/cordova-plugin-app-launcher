@@ -1,3 +1,4 @@
+
 #import "Launcher.h"
 #import <Cordova/CDV.h>
 
@@ -30,7 +31,11 @@
 		NSString *uri = [options objectForKey:@"uri"];
 		if ([[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString:uri]]) {
 			NSURL *launchURL = [NSURL URLWithString:uri];
-			[[UIApplication sharedApplication] openURL: launchURL];
+			if (@available(iOS 10.0, *)) {
+				[[UIApplication sharedApplication] openURL:launchURL options:@{} completionHandler:nil];
+			} else {
+				[[UIApplication sharedApplication] openURL: launchURL];
+			}
 			pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
 			[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 		} else {
